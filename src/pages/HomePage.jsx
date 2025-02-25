@@ -1,16 +1,15 @@
-import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import React from "react";
+import Header from "../components/Header";
+// import Footer from "../components/Footer";
+import Intro from "../components/Intro";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="home-container">
       <Header />
-      <main>
-        <h2>Chào mừng đến với Khách Sạn XYZ</h2>
-        <p>Đây là trang chủ quản lý khách sạn của chúng tôi.</p>
-      </main>
-      <Footer />
+      <Intro />
+
+      {/* <Footer /> */}
     </div>
   );
 };

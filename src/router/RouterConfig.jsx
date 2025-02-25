@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage'; // Đảm bảo đường dẫn này �
 // Định nghĩa các route
 const router = createBrowserRouter([
     {
-        path: '/home',
+        path: '/',
         element: <HomePage />,
     },
     // Bạn có thể thêm các route khác ở đây
