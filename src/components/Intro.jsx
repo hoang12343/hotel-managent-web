@@ -1,4 +1,3 @@
-// src/components/Intro.jsx
 import React from "react";
 import "./Intro.scss";
 import ScrollRevealComponent from "./ScrollRevealComponent";
@@ -25,7 +24,7 @@ const Intro = () => {
             </span>
             <div className="input-group">
               <label htmlFor="Check-in"></label>
-              <input type="text" placeholder="Check-in" />
+              <input type="date" placeholder="Check-in" />
             </div>
           </div>
 
@@ -35,17 +34,29 @@ const Intro = () => {
             </span>
             <div className="input-group">
               <label htmlFor="Check-out"></label>
-              <input type="text" placeholder="Check-out" />
+              <input type="date" placeholder="Check-out" />
             </div>
           </div>
 
+          {/* Replaced Guest with Adults */}
           <div className="input-group">
             <span>
               <FaUser />
             </span>
             <div className="input-group">
-              <label htmlFor="GUEST"></label>
-              <input type="text" placeholder="Guest" />
+              <label htmlFor="Adults"></label>
+              <input type="number" placeholder="Adults" min={0} />
+            </div>
+          </div>
+
+          {/* Added Children */}
+          <div className="input-group">
+            <span>
+              <FaUser />
+            </span>
+            <div className="input-group">
+              <label htmlFor="Children"></label>
+              <input type="number" placeholder="Children" min={0} />
             </div>
           </div>
 

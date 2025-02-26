@@ -1,54 +1,53 @@
 .header-container {
-  padding-block: 10rem 5rem; // Giảm padding dưới để form có thể hiển thị ở cuối
-  height: 280px; // Đảm bảo container đủ cao để chứa cả tiêu đề và form
-  background-image: url('../assets/Intro.jpg');
+  padding-block: 10rem 5rem;
+  height: 280px;
+  background-image: url("../assets/Intro.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; // Đẩy nội dung lên trên và form xuống dưới
+  justify-content: space-between;
   align-items: center;
   color: white;
   text-align: center;
   overflow: hidden;
-  position: relative; // Để form có thể định vị chính xác
+  position: relative;
   border-radius: 15px;
 }
 
 .intro-content {
-
-  padding-top: 5rem; // Thêm khoảng cách trên cho tiêu đề
+  padding-top: 5rem;
 }
 
 .booking-container {
   width: 100%;
   padding: 2rem;
-  background-color: rgba(255, 255, 255, 0.9); // Nền trắng bán trong suốt cho form
-  margin-top: auto; // Đẩy form xuống dưới cùng
-  margin-bottom: 2rem; // Khoảng cách dưới form
+  background-color: rgba(255, 255, 255, 0.9);
+  margin-top: auto;
+  margin-bottom: 2rem;
 }
 
 .section-container {
-  // Giữ nguyên nếu không cần style riêng
+  // Keep as is if no specific styles needed
 }
 
 .booking-form {
   overflow: hidden;
   padding: 1rem;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem; // Reduced gap slightly to fit four inputs comfortably
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   background-color: var(--white);
   border: 2px solid red;
-  border-radius: 15px; // Thêm bo góc cho form
+  border-radius: 15px;
   box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.1);
-  max-width: 1000px; // Giới hạn chiều rộng form
+  max-width: 1350px;
   height: 40px;
-  margin: 0 auto; // Căn giữa form
+  margin: 0 auto;
 }
 
 .input-group {
@@ -57,7 +56,7 @@
 
   span {
     margin-right: 0.5rem;
-    color: #333; // Màu icon đậm hơn
+    color: #333;
   }
 
   input {
@@ -65,17 +64,17 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    width: 200px; // Điều chỉnh độ rộng input
+    width: 180px; // Slightly reduced width to accommodate extra input
   }
 }
 
 .input-btn {
-  margin-left: auto; // Đẩy nút CHECK-OUT sang phải
+  margin-left: auto;
 }
 
 .btn {
   padding: 0.7rem 1.5rem;
-  background-color: #ff0000; // Màu đỏ cho nút, giống đường viền form
+  background-color: #ff0000;
   color: white;
   border: none;
   border-radius: 5px;
@@ -83,25 +82,25 @@
   font-weight: bold;
 
   &:hover {
-    background-color: #cc0000; // Màu đỏ đậm hơn khi hover
+    background-color: #cc0000;
   }
 }
 
 // Responsive design
 @media (max-width: 768px) {
   .header-container {
-    min-height: 150vh; // Giảm chiều cao trên mobile
+    min-height: 150vh;
     padding-block: 5rem 2rem;
   }
 
   .booking-form {
-    flex-direction: column; // Stack các input trên mobile
+    flex-direction: column;
     gap: 0.5rem;
     padding: 1rem;
   }
 
   .input-group {
-    width: 100%; // Input chiếm toàn bộ chiều rộng trên mobile
+    width: 100%;
     flex: 1 1 220px;
     display: flex;
     align-items: center;
@@ -109,13 +108,11 @@
     gap: 1rem;
 
     input {
-      width: 100%; // Input đầy đủ chiều rộng
+      width: 100%;
     }
   }
 
-  .input-group input {}
-
   .input-btn {
-    margin-left: 0; // Reset margin trên mobile
+    margin-left: 0;
   }
 }

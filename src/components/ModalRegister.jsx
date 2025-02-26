@@ -1,42 +1,47 @@
 import React, { useState } from "react";
-import "./ModalLogin.scss";
+import "./ModalRegister.scss";
 import { FaApple } from "react-icons/fa6";
-import { IoCloseSharp } from "react-icons/io5";
 
-const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
+const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login submitted", { username, password, rememberMe });
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match");
+      return;
+    }
+    console.log("Register submitted", { username, email, password });
+    // Add your registration logic here
   };
 
   const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    // Add Google login logic here
+    console.log("Google register clicked");
+    // Add Google registration logic here
   };
 
   const handleAppleLogin = () => {
-    console.log("Apple login clicked");
-    // Add Apple login logic here
+    console.log("Apple register clicked");
+    // Add Apple registration logic here
   };
 
   const handleFacebookLogin = () => {
-    console.log("Facebook login clicked");
-    // Add Facebook login logic here
+    console.log("Facebook register clicked");
+    // Add Facebook registration logic here
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <button className="modal-close-btn" onClick={onClose}>
-          <IoCloseSharp />
+          ×
         </button>
-        <h2>Đăng nhập</h2>
+        <h2>Đăng ký</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Tên đăng nhập</label>
@@ -46,6 +51,17 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Nhập tên đăng nhập"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Nhập email"
               required
             />
           </div>
@@ -60,26 +76,24 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
               required
             />
           </div>
-          <div className="login-options">
-            <label className="remember-me">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              Remember me
-            </label>
-            <a href="#forgot-password" className="forgot-password">
-              Quên mật khẩu?
-            </a>
+          <div className="form-group">
+            <label htmlFor="confirm-password">Xác nhận mật khẩu</label>
+            <input
+              type="password"
+              id="confirm-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Xác nhận mật khẩu"
+              required
+            />
           </div>
-          <button type="submit" className="login-submit-btn">
-            Đăng nhập
+          <button type="submit" className="register-submit-btn">
+            Đăng ký
           </button>
         </form>
 
         <div className="social-login-separator">
-          <span>Hoặc đăng nhập với</span>
+          <span>Hoặc đăng ký với</span>
         </div>
 
         <div className="social-login-buttons">
@@ -124,11 +138,11 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
           </button>
         </div>
 
-        <div className="register-link">
-          Chưa có tài khoản?{" "}
+        <div className="login-link">
+          Đã có tài khoản?{" "}
           <button
-            onClick={onOpenRegister} // Use button with onClick instead of <a>
-            className="register-now"
+            onClick={onOpenLogin} // Use button with onClick instead of <a>
+            className="login-now"
             style={{
               background: "none",
               border: "none",
@@ -136,7 +150,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
               cursor: "pointer",
             }} // Match link styling
           >
-            Đăng ký ngay
+            Đăng nhập ngay
           </button>
         </div>
       </div>
@@ -144,4 +158,4 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
   );
 };
 
-export default ModalLogin;
+export default ModalRegister;

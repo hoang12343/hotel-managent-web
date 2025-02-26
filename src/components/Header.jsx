@@ -1,16 +1,37 @@
 import React, { useState } from "react";
 import "./Header.scss";
 import ModalLogin from "./ModalLogin.jsx";
+import ModalRegister from "./ModalRegister.jsx";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const handleLoginClick = () => {
     setIsModalOpen(true);
   };
 
+  const handleRegisterClick = () => {
+    setIsRegisterModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
+
+  const handleOpenRegisterFromLogin = () => {
+    setIsModalOpen(false); // Close the login modal
+    setIsRegisterModalOpen(true); // Open the register modal
+  };
+
+  // New function to handle opening the login modal from register modal
+  const handleOpenLoginFromRegister = () => {
+    setIsRegisterModalOpen(false); // Close the register modal
+    setIsModalOpen(true); // Open the login modal
   };
 
   return (
@@ -61,11 +82,20 @@ const Header = () => {
             </button>
           </ul>
           <ul className="login-btn">
-            <button>Đăng ký</button>
+            <button onClick={handleRegisterClick}>Đăng ký</button>
           </ul>
         </div>
       </header>
-      <ModalLogin isOpen={isModalOpen} onClose={handleCloseModal} />
+      <ModalLogin
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onOpenRegister={handleOpenRegisterFromLogin}
+      />
+      <ModalRegister
+        isOpen={isRegisterModalOpen}
+        onClose={handleCloseRegisterModal}
+        onOpenLogin={handleOpenLoginFromRegister} // Pass the new callback
+      />
     </>
   );
 };
