@@ -14,10 +14,11 @@
   text-align: center;
   overflow: hidden;
   position: relative; // Để form có thể định vị chính xác
+  border-radius: 15px;
 }
 
 .intro-content {
-  
+
   padding-top: 5rem; // Thêm khoảng cách trên cho tiêu đề
 }
 
@@ -53,12 +54,12 @@
 .input-group {
   display: flex;
   align-items: center;
-  
+
   span {
     margin-right: 0.5rem;
     color: #333; // Màu icon đậm hơn
   }
-  
+
   input {
     padding: 0.7rem;
     border: 1px solid #ccc;
@@ -80,7 +81,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  
+
   &:hover {
     background-color: #cc0000; // Màu đỏ đậm hơn khi hover
   }
@@ -106,14 +107,13 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+
     input {
       width: 100%; // Input đầy đủ chiều rộng
     }
   }
 
-  .input-group input{
-     
-  }
+  .input-group input {}
 
   .input-btn {
     margin-left: 0; // Reset margin trên mobile

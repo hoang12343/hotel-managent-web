@@ -10,10 +10,11 @@ const HomeContent = () => {
         <div className="content-wrapper">
           <h2>Tìm hiểu về Khách Sạn của chúng tôi</h2>
           <p className="intro-text">
-            Discover a place where comfort meets elegance. Our hotel offers you
-            a unique experience with top-notch services, modern amenities, and a
-            warm, welcoming atmosphere. Whether you're here for business or
-            leisure, we ensure your stay is unforgettable.
+            Khám phá một nơi mà sự thoải mái hòa quyện với sự sang trọng. Khách
+            sạn của chúng tôi mang đến cho bạn một trải nghiệm độc đáo với các
+            dịch vụ hàng đầu, tiện nghi hiện đại và bầu không khí ấm cúng, thân
+            thiện. Dù bạn đến đây vì công việc hay nghỉ dưỡng, chúng tôi đảm bảo
+            kỳ nghỉ của bạn sẽ khó quên.
           </p>
 
           <div className="features-grid">
