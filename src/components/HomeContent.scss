@@ -1,0 +1,159 @@
+// src/components/HomeContent.scss
+.home-content-container {
+  padding: 5rem 2rem;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.popular-rooms-container {
+  padding: 5rem 2rem;
+  background-color: #f9f9f9; // Nền trắng để phân biệt với section trước
+  text-align: center;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.intro-text {
+  font-size: 1.2rem;
+  color: #666;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 3rem auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.feature-item {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #777;
+  }
+}
+
+/* Style cho section phòng nổi bật */
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); // 4 cột ngang
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.room-item {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
+
+  .room-image {
+    width: 100%;
+    height: 150px; // Chiều cao cố định cho ảnh
+    object-fit: cover; // Đảm bảo ảnh không bị méo
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 1rem 0 0.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #777;
+    padding: 0 1rem;
+  }
+
+  .rating {
+    display: block;
+    font-size: 1rem;
+    color: #ff0000; // Màu đỏ cho điểm đánh giá
+    font-weight: bold;
+    padding: 0.5rem 1rem 1rem;
+  }
+}
+
+.cta-section {
+  .explore-btn {
+    padding: 1rem 2.5rem;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #cc0000;
+    }
+  }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .features-grid,
+  .rooms-grid {
+    grid-template-columns: repeat(2, 1fr); // 2 cột trên tablet
+  }
+}
+
+@media (max-width: 768px) {
+  .home-content-container,
+  .popular-rooms-container {
+    padding: 3rem 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .intro-text {
+    font-size: 1rem;
+  }
+
+  .features-grid,
+  .rooms-grid {
+    grid-template-columns: 1fr; // 1 cột trên mobile
+  }
+}

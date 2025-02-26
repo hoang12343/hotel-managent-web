@@ -1,10 +1,20 @@
 .header {
   display: flex;
+  z-index: 1000;
+  position: sticky; // Bám dính khi cuộn đến
+  top: 0;
   justify-content: space-between;
   align-items: center;
-  background-color: #FFFF99;
+  background-color: #FFFFFF;
   padding: 5px 20px;
+  position: sticky;
+  
+}
+
+.logo{
   color: #F7FCAD;
+  // font-family: ;
+
 }
 
 .nav-list {
@@ -27,7 +37,7 @@
 
 .nav-list a {
   text-decoration: none;
-  color: rgb(108, 107, 169);
+  color: #A0A0A0;
   font-size: 1rem;
   transition: box-shadow 0.3s ease;
 }

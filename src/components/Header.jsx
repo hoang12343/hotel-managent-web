@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="nav-logo">
-        <h1 className="logo">My Website</h1>
+        <h1 className="logo">VTI HOTEL</h1>
       </div>
 
       <nav className="nav-list">
@@ -18,17 +18,22 @@ const Header = () => {
           </li>
           <li>
             <a href="#about" className="nav-link">
-              About
+              Phòng
+            </a>
+          </li>
+          <li>
+            <a href="#about" className="nav-link">
+              Tiện nghi
             </a>
           </li>
           <li>
             <a href="#contact" className="nav-link">
-              Contact
+              Liên Hệ
             </a>
           </li>
           <li>
-            <a href="#contact" className="nav-link">
-              About us
+            <a href="#AboutUs" className="nav-link">
+              Giới thiệu
             </a>
           </li>
         </ul>
