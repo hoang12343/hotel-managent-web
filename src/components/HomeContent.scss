@@ -132,6 +132,7 @@ h2 {
 
 /* Responsive design */
 @media (max-width: 1024px) {
+
   .features-grid,
   .rooms-grid {
     grid-template-columns: repeat(2, 1fr); // 2 cột trên tablet
@@ -139,6 +140,7 @@ h2 {
 }
 
 @media (max-width: 768px) {
+
   .home-content-container,
   .popular-rooms-container {
     padding: 3rem 1rem;

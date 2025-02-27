@@ -45,7 +45,7 @@ const Header = () => {
           <ul>
             <li>
               <a href="#home" className="nav-link">
-                Home
+                Trang chủ
               </a>
             </li>
             <li>

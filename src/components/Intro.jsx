@@ -45,7 +45,7 @@ const Intro = () => {
             </span>
             <div className="input-group">
               <label htmlFor="Adults"></label>
-              <input type="number" placeholder="Adults" min={0} />
+              <input type="number" placeholder="Adults" min={0} max={20} />
             </div>
           </div>
 
@@ -56,7 +56,7 @@ const Intro = () => {
             </span>
             <div className="input-group">
               <label htmlFor="Children"></label>
-              <input type="number" placeholder="Children" min={0} />
+              <input type="number" placeholder="Children" min={0} max={20} />
             </div>
           </div>
 
