@@ -25,7 +25,7 @@ public class Account extends Base {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "phone_number")
@@ -49,6 +49,10 @@ public class Account extends Base {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "confirmCode")
+    private String confirmCode;
+
+
     public enum Gender {
         MALE, FEMALE
     }
@@ -58,6 +62,8 @@ public class Account extends Base {
     }
 
     public enum AccountStatus{
-        ACTIVE, INACTIVE
+        ACTIVE,PENDING, INACTIVE
     }
+
+
 }

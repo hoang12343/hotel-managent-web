@@ -8,8 +8,9 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 @Data
+@AllArgsConstructor
 public class LoginResponse {
     private String token;
-    private String username;
+    private String identifier;
     private Collection<? extends GrantedAuthority> authorities;
 }

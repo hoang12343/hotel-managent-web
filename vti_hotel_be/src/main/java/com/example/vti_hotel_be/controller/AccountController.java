@@ -1,6 +1,9 @@
 package com.example.vti_hotel_be.controller;
 
 import com.example.vti_hotel_be.modal.request.AccountRequest;
+import com.example.vti_hotel_be.modal.request.ConfirmAccountRequest;
+import com.example.vti_hotel_be.modal.responseDTO.dto.AccountDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +49,7 @@ public class AccountController {
     }
 
     @PutMapping(value = "/updateAccount")
-//    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<?> updateAccount(@RequestParam("accountId") int id, @RequestBody AccountRequest request){
         try{
             return new ResponseEntity<>(accountService.updateAccount(id, request), HttpStatus.OK);
@@ -54,4 +57,31 @@ public class AccountController {
             return new ResponseEntity<>("Error: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/register")
+    public ResponseEntity<?> registerAccount(@RequestBody AccountRequest request){
+        try{
+            return new ResponseEntity<>(accountService.register(request), HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>("Error: "+e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @PostMapping("/confirmAccount")
+    public ResponseEntity<?> confirmAccount(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("confirmCode") String confirmCode) {
+        try {
+            AccountDTO accountDTO = accountService.confirmAccount(
+                    email.trim(),
+                    password,
+                    confirmCode.trim()
+            );
+            return new ResponseEntity<>(accountDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Lỗi: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

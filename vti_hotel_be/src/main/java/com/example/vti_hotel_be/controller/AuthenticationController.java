@@ -27,30 +27,45 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            // Authenticate with username/password
-            // Check for null values
-            if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
+            // Xác thực đầu vào
+            if (loginRequest.getEmail() == null || loginRequest.getEmail().trim().isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body("Tài khoản hoặc mật khẩu không được để trống");
+                        .body(new ErrorResponse("Email không được để trống"));
             }
+            if (loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrorResponse("Mật khẩu không được để trống"));
+            }
+
+            // Xác thực bằng email và mật khẩu
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
+                            loginRequest.getEmail().trim(), // Sử dụng email
                             loginRequest.getPassword()
                     )
             );
 
-            // Generate JWT token
+            // Tạo mã JWT
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             final String token = jwtTokenUtil.generateToken(userDetails);
 
-            // Return token in response
-            return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), userDetails.getAuthorities()));
+            // Trả về phản hồi
+            return ResponseEntity.ok(
+                    new AuthResponse(token, userDetails.getUsername(), userDetails.getAuthorities())
+            );
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("Email hoặc mật khẩu không đúng"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Authentication error: " + e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Lỗi xác thực: " + e.getMessage()));
         }
     }
 }
+
+// Lớp phản hồi lỗi
+record ErrorResponse(String message) {}

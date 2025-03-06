@@ -14,11 +14,9 @@ public class AccountDTO {
     private String birthDate;
     private String imageCard;
     private String gender;
-//    private String accountLevel;
-//    private String amountSpent;
-//    private String cumulativePoint;
-    private String accountStatus;
+    private String status;
     private String role;
+    private String confirmCode;
     public AccountDTO(Account account) {
         this.accountId = String.valueOf(account.getId());
         this.fullName = account.getFullName() != null ? account.getFullName() : null;
@@ -28,6 +26,9 @@ public class AccountDTO {
         this.birthDate = account.getBirthDate() != null ? String.valueOf(account.getBirthDate()) : null;
         this.imageCard = account.getImageCard() != null ? account.getImageCard() : null;
         this.gender = account.getGender() != null ? account.getGender().toString() : null;
+        this.status = account.getStatus() != null ? account.getStatus().toString() : null;
+        this.confirmCode = account.getConfirmCode() != null ? account.getConfirmCode() : null;
+
 
     }
 

@@ -64,7 +64,11 @@ public class SecurityConfig {
 //                                "/hotel/**",
                                 "/hotel/login",
                                 "/hotel/createAccountByAdmin",
-                                "hotel/createRoom"
+                                "hotel/createRoom",
+                                "/hotel/register",
+                                "hotel/confirmAccount",
+                                "/hotel/findAccount"
+//                                "/hotel/sendMail"
 
                         ).permitAll()
                         .anyRequest().authenticated())

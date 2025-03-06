@@ -30,21 +30,20 @@ public class AccountRequest {
     private String status;
     private String role;
 
-    public Account register(){
+
+
+    public Account register() throws Exception {
         Account account = new Account();
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         account.setUsername(username);
         account.setPassword(passwordEncoder.encode(password));
         account.setFullName(fullName);
-        account.setGender(null);
-        account.setImageCard(null);
         account.setEmail(email);
         account.setPhoneNumber(phoneNumber);
-        account.setBirthDate(null);
-//        account.setLevel(Account.Level.NEW_CUSTOMER);
-//        account.setAmountSpent(0);
-//        account.setCumulativePoints(0);
-//        account.setStatus(Account.StatusAccount.PENDING);
+        account.setBirthDate(convertToLocalDate(this.birthDate));
+        account.setImageCard(imageCard);
+        account.setGender(convertToEnum(Account.Gender.class, gender));
+        account.setStatus(Account.AccountStatus.PENDING);
         account.setRole(Account.Role.USER);
         return account;
     }
@@ -74,15 +73,16 @@ public class AccountRequest {
     public Account createAccount() throws Exception {
         Account account = new Account();
         account.setUsername(username);
-//        account.setLevel(convertToEnum(Account.Level.class, level));
-//        account.setAmountSpent(Double.parseDouble(amountSpending));
-//        account.setCumulativePoints(Integer.parseInt(cumulativePoint));
         account.setImageCard(imageCard);
         account.setRole(convertToEnum(Account.Role.class, role));
         account.setGender(convertToEnum(Account.Gender.class, gender));
-//        account.setStatus(convertToEnum(Account.StatusAccount.class, status));
         populateAccount(account);
         return account;
+
+    }
+
+
+    public void confirmAccount() throws Exception{
 
     }
 }
