@@ -1,12 +1,12 @@
 // src/components/ModalRegister.jsx
 import React, { useState } from "react";
-import axiosClient from "../services/axiosClient"; // Import axiosClient
+import axiosClient from "../services/axiosClient";
 import "./ModalRegister.scss";
 import { FaApple } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 
 const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
-  const [emailOrPhone, setEmailOrPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -33,15 +33,12 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
     setIsLoading(true);
 
     try {
-      // Gọi API đăng ký bằng axiosClient
       const response = await axiosClient.post("/register", {
-        emailOrPhone,
-        password,
+        email: email,
+        password: password,
       });
 
-      const { message } = response.data;
-      console.log("Đăng ký thành công:", message);
-
+      console.log("Đăng ký thành công:", response.data);
       setIsRegistered(true);
       setTimeout(() => {
         onClose();
@@ -49,7 +46,8 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
       }, 2000);
     } catch (err) {
       const errorMessage =
-        err.response?.data?.message || "Đăng ký thất bại. Vui lòng thử lại.";
+        err.response?.data || // Backend trả về chuỗi lỗi trực tiếp
+        "Đăng ký thất bại. Vui lòng thử lại.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -58,7 +56,7 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
 
   const resetForm = () => {
     setIsRegistered(false);
-    setEmailOrPhone("");
+    setEmail("");
     setPassword("");
     setConfirmPassword("");
     setAgreeTerms(false);
@@ -93,6 +91,7 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
         {isRegistered ? (
           <div className="register-success">
             <h2>Đăng ký thành công</h2>
+            <p>Vui lòng kiểm tra email để xác nhận tài khoản.</p>
             <div className="success-icon">✓</div>
           </div>
         ) : (
@@ -101,13 +100,13 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
             {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="emailOrPhone">Email/Số điện thoại</label>
+                <label htmlFor="email">Email</label>
                 <input
-                  type="text"
-                  id="emailOrPhone"
-                  value={emailOrPhone}
-                  onChange={(e) => setEmailOrPhone(e.target.value)}
-                  placeholder="Nhập email hoặc số điện thoại"
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Nhập email"
                   required
                   disabled={isLoading}
                 />
