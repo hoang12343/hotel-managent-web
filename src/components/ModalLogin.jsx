@@ -1,4 +1,6 @@
+// src/components/ModalLogin.jsx
 import React, { useState } from "react";
+import axiosClient from "../services/axiosClient"; // Import axiosClient
 import "./ModalLogin.scss";
 import { FaApple } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
@@ -7,23 +9,54 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Thêm state để theo dõi trạng thái đăng nhập
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login submitted", { username, password, rememberMe });
-    // Giả lập đăng nhập thành công - trong thực tế bạn sẽ kiểm tra với API
-    setIsLoggedIn(true);
-    // Tự động đóng modal sau 2 giây (tuỳ chọn)
-    setTimeout(() => {
-      onClose();
-      setIsLoggedIn(false); // Reset trạng thái khi đóng
-      setUsername(""); // Reset form
-      setPassword("");
-      setRememberMe(false);
-    }, 2000);
+    setError("");
+    setIsLoading(true);
+
+    try {
+      // Gọi API đăng nhập bằng axiosClient
+      const response = await axiosClient.post("/login", {
+        emailOrPhone,
+        password,
+      });
+
+      const { token, message } = response.data;
+      console.log("Đăng nhập thành công:", message);
+
+      if (rememberMe) {
+        localStorage.setItem("token", token);
+      } else {
+        sessionStorage.setItem("token", token);
+      }
+
+      setIsLoggedIn(true);
+      setTimeout(() => {
+        onClose();
+        resetForm();
+      }, 2000);
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setIsLoggedIn(false);
+    setUsername("");
+    setPassword("");
+    setRememberMe(false);
+    setError("");
   };
 
   const handleGoogleLogin = () => {
@@ -68,16 +101,18 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
         ) : (
           <>
             <h2>Đăng nhập</h2>
+            {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="username">Tên đăng nhập</label>
+                <label htmlFor="username">Email/Số điện thoại</label>
                 <input
                   type="text"
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Nhập tên đăng nhập"
+                  placeholder="Nhập email hoặc số điện thoại"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <div className="form-group">
@@ -89,6 +124,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Nhập mật khẩu"
                   required
+                  disabled={isLoading}
                 />
               </div>
               <div className="login-options">
@@ -97,6 +133,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
+                    disabled={isLoading}
                   />
                   Remember me
                 </label>
@@ -104,8 +141,12 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
                   Quên mật khẩu?
                 </a>
               </div>
-              <button type="submit" className="login-submit-btn">
-                Đăng nhập
+              <button
+                type="submit"
+                className="login-submit-btn"
+                disabled={isLoading}
+              >
+                {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
             </form>
 
@@ -117,30 +158,28 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
               <button
                 className="social-btn google-btn"
                 onClick={handleGoogleLogin}
+                disabled={isLoading}
               >
                 <svg className="social-logo" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="..." />
-                  <path fill="#34A853" d="..." />
-                  <path fill="#FBBC05" d="..." />
-                  <path fill="#EA4335" d="..." />
+                  {/* SVG Google */}
                 </svg>
                 Google
               </button>
               <button
                 className="social-btn apple-btn"
                 onClick={handleAppleLogin}
+                disabled={isLoading}
               >
-                <svg className="social-logo" viewBox="0 0 24 24">
-                  <FaApple />
-                </svg>
+                <FaApple className="social-logo" />
                 Apple
               </button>
               <button
                 className="social-btn facebook-btn"
                 onClick={handleFacebookLogin}
+                disabled={isLoading}
               >
                 <svg className="social-logo" viewBox="0 0 24 24">
-                  <path fill="#1877F2" d="..." />
+                  {/* SVG Facebook */}
                 </svg>
                 Facebook
               </button>
@@ -148,16 +187,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
 
             <div className="register-link">
               Chưa có tài khoản?{" "}
-              <button
-                onClick={onOpenRegister}
-                className="register-now"
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={onOpenRegister} className="register-now">
                 Đăng ký ngay
               </button>
             </div>

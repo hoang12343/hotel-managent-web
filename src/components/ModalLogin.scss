@@ -1,11 +1,10 @@
-// ModalLogin.scss
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,49 +12,333 @@
 }
 
 .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     position: relative;
+    animation: slideIn 0.3s ease-out;
+
+    h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
 }
 
 .modal-close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    border: none;
+    top: 15px;
+    right: 15px;
     background: none;
+    border: none;
     font-size: 24px;
-    cursor: pointer;
     color: #666;
-}
+    cursor: pointer;
+    transition: color 0.2s;
 
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+    &:hover {
+        color: #000;
+    }
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 
     label {
         display: block;
-        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: 500;
         color: #555;
+        margin-bottom: 8px;
     }
 
     input {
-        width: 95%;
-        padding: 8px;
+        width: 100%;
+        padding: 12px 15px;
         border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 1rem;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+        /* Thêm dòng này */
+
+        &:focus {
+            border-color: #4caf50;
+        }
+
+        &::placeholder {
+            color: #aaa;
+        }
     }
 }
 
+.terms-group {
+    margin-bottom: 20px;
+
+    .terms-label {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #555;
+
+        input {
+            margin-right: 8px;
+        }
+
+        .terms-link {
+            color: #007bff;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.register-submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+        background: #0056b3;
+    }
+
+    &:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+}
+
+.register-success {
+    text-align: center;
+
+    h2 {
+        font-size: 20px;
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+
+    .success-icon {
+        font-size: 40px;
+        color: #007bff;
+    }
+}
+
+.social-login-separator {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+
+    span {
+        font-size: 14px;
+        color: #666;
+        background: #fff;
+        padding: 0 10px;
+        position: relative;
+        z-index: 1;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: #ddd;
+        z-index: 0;
+    }
+}
+
+.social-login-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        .social-logo {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        &.google-btn {
+            color: #4285f4;
+
+            &:hover {
+                background: #f8f9fa;
+            }
+        }
+
+        &.apple-btn {
+            color: #000;
+
+            &:hover {
+                background: #f8f9fa;
+            }
+        }
+
+        &.facebook-btn {
+            color: #1877f2;
+
+            &:hover {
+                background: #f8f9fa;
+            }
+        }
+    }
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+
+    .login-now {
+        color: #007bff;
+        font-weight: 500;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ModalLogin.scss
+
+
+// Overlay bao ngoài modal
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); // Nền mờ với độ trong suốt
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+// Nội dung modal
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+
+    h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+}
+
+// Nút đóng modal
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+        color: #000;
+    }
+}
+
+// Form nhóm input
+.form-group {
+    margin-bottom: 20px;
+
+    label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        color: #333;
+        outline: none;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+        /* Thêm dòng này */
+
+        &:focus {
+            border-color: #007bff;
+        }
+
+        &::placeholder {
+            color: #aaa;
+        }
+    }
+}
+
+// Tùy chọn đăng nhập (Remember me và Quên mật khẩu)
 .login-options {
     display: flex;
     justify-content: space-between;
@@ -65,16 +348,17 @@ h2 {
     .remember-me {
         display: flex;
         align-items: center;
-        gap: 5px;
-        color: #666;
+        font-size: 14px;
+        color: #555;
 
         input {
-            margin: 0;
+            margin-right: 8px;
         }
     }
 
     .forgot-password {
-        color: #4caf50;
+        font-size: 14px;
+        color: #007bff;
         text-decoration: none;
 
         &:hover {
@@ -83,104 +367,150 @@ h2 {
     }
 }
 
+// Nút đăng nhập chính
 .login-submit-btn {
     width: 100%;
-    background-color: #4caf50;
-    color: white;
-    border: none;
     padding: 12px;
-    border-radius: 4px;
-    font-size: 1rem;
+    background: #007bff;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background 0.2s;
 
     &:hover {
-        background-color: #45a049;
+        background: #0056b3;
     }
 }
 
+// Phần thông báo đăng nhập thành công
+.login-success {
+    text-align: center;
+
+    h2 {
+        font-size: 20px;
+        color: #28a745;
+        margin-bottom: 20px;
+    }
+
+    .success-icon {
+        font-size: 40px;
+        color: #28a745;
+    }
+}
+
+// Dòng phân cách "Hoặc đăng nhập với"
 .social-login-separator {
-    position: relative;
     text-align: center;
     margin: 20px 0;
+    position: relative;
 
     span {
+        font-size: 14px;
+        color: #666;
         background: #fff;
         padding: 0 10px;
-        color: #666;
         position: relative;
         z-index: 1;
     }
 
-    &:before {
-        content: '';
+    &::before {
+        content: "";
         position: absolute;
         top: 50%;
         left: 0;
-        right: 0;
+        width: 100%;
         height: 1px;
         background: #ddd;
+        z-index: 0;
     }
 }
 
+// Các nút đăng nhập mạng xã hội
 .social-login-buttons {
     display: flex;
-    gap: 10px;
     flex-direction: column;
-    margin-bottom: 20px;
+    gap: 10px;
 
     .social-btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
         width: 100%;
-        padding: 10px;
-        border-radius: 4px;
+        padding: 12px;
         border: 1px solid #ddd;
-        background: #fff;
+        border-radius: 8px;
+        font-size: 16px;
         cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.3s;
-
-        &:hover {
-            background-color: #f5f5f5;
-        }
+        transition: background 0.2s;
 
         .social-logo {
             width: 20px;
             height: 20px;
+            margin-right: 10px;
         }
-    }
 
-    .google-btn:hover {
-        border-color: #4285F4;
-    }
+        &.google-btn {
+            color: #4285f4;
 
-    .apple-btn:hover {
-        border-color: #000;
-    }
+            &:hover {
+                background: #f8f9fa;
+            }
+        }
 
-    .facebook-btn:hover {
-        border-color: #1877F2;
+        &.apple-btn {
+            color: #000;
+
+            &:hover {
+                background: #f8f9fa;
+            }
+        }
+
+        &.facebook-btn {
+            color: #1877f2;
+
+            &:hover {
+                background: #f8f9fa;
+            }
+        }
     }
 }
 
+// Liên kết đăng ký
 .register-link {
     text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
     color: #666;
-    font-size: 0.9rem;
 
     .register-now {
-        color: #4caf50;
-        text-decoration: none;
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
+        color: #007bff;
+        font-weight: 500;
 
         &:hover {
             text-decoration: underline;
         }
+    }
+}
+
+.error-message {
+    color: #d32f2f;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+// Animation khi modal xuất hiện
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
