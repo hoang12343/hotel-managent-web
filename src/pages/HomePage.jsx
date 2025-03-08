@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Intro from "../components/Intro";
 import HomeContent from "../components/HomeContent";
+import Testimonials from "../components/Testimonials";
+import Cta from "../components/Cta";
 
 const HomePage = () => {
   return (
@@ -10,6 +12,8 @@ const HomePage = () => {
       <Header />
       <Intro />
       <HomeContent />
+      <Testimonials />
+      <Cta />
 
       <Footer />
     </div>

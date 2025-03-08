@@ -5,7 +5,12 @@ import "./ModalRegister.scss";
 import { FaApple } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 
-const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
+const ModalRegister = ({
+  isOpen,
+  onClose,
+  onOpenLogin,
+  onOpenEmailConfirm,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,11 +25,18 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
     e.preventDefault();
     setError("");
 
+    if (!email || !password || !confirmPassword) {
+      setError("Vui lòng điền đầy đủ thông tin");
+      return;
+    }
+    if (!email.includes("@") || !email.includes(".")) {
+      setError("Email không hợp lệ");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("Mật khẩu không khớp");
       return;
     }
-
     if (!agreeTerms) {
       setError("Bạn phải đồng ý với Điều khoản dịch vụ");
       return;
@@ -33,21 +45,26 @@ const ModalRegister = ({ isOpen, onClose, onOpenLogin }) => {
     setIsLoading(true);
 
     try {
+      console.log("Dữ liệu gửi lên:", { email, password, confirmPassword });
       const response = await axiosClient.post("/register", {
         email: email,
         password: password,
+        confirmPassword: confirmPassword,
       });
-
       console.log("Đăng ký thành công:", response.data);
       setIsRegistered(true);
       setTimeout(() => {
-        onClose();
+        onClose(); // Đóng ModalRegister
+        onOpenEmailConfirm(email); // Mở EmailConfirmModal với email vừa đăng ký
         resetForm();
       }, 2000);
     } catch (err) {
-      const errorMessage =
-        err.response?.data || // Backend trả về chuỗi lỗi trực tiếp
-        "Đăng ký thất bại. Vui lòng thử lại.";
+      console.log("Lỗi chi tiết từ server:", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+      });
+      const errorMessage = err.message || "Đăng ký thất bại. Vui lòng thử lại.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);

@@ -1,4 +1,3 @@
-// src/components/ModalLogin.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../services/axiosClient";
@@ -6,7 +5,7 @@ import "./ModalLogin.scss";
 import { FaApple } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 
-const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
+const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -25,11 +24,11 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
 
     try {
       const response = await axiosClient.post("/login", {
-        email: emailOrPhone, // Sửa từ emailOrPhone thành email để khớp với LoginRequest
+        email: emailOrPhone,
         password,
       });
 
-      const { token, username } = response.data; // Response mới có token và username
+      const { token, username } = response.data; // Giả sử response trả về token và username
       console.log("Đăng nhập thành công:", username);
 
       if (rememberMe) {
@@ -43,10 +42,11 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
         onClose();
         resetForm();
         navigate("/");
+        onLoginSuccess({ username }); // Gọi callback để truyền thông tin người dùng
       }, 2000);
     } catch (err) {
       const errorMessage =
-        err.response?.data?.message || // Lấy message từ ErrorResponse
+        err.response?.data?.message ||
         "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.";
       setError(errorMessage);
     } finally {
@@ -69,6 +69,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
       onClose();
       setIsLoggedIn(false);
       navigate("/");
+      onLoginSuccess({ username: "GoogleUser" }); // Giả lập
     }, 2000);
   };
 
@@ -79,6 +80,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
       onClose();
       setIsLoggedIn(false);
       navigate("/");
+      onLoginSuccess({ username: "AppleUser" }); // Giả lập
     }, 2000);
   };
 
@@ -89,6 +91,7 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
       onClose();
       setIsLoggedIn(false);
       navigate("/");
+      onLoginSuccess({ username: "FacebookUser" }); // Giả lập
     }, 2000);
   };
 
@@ -110,13 +113,12 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister }) => {
             {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="emailOrPhone">Email/Số điện thoại</label>{" "}
-                {/* Thay id */}
+                <label htmlFor="emailOrPhone">Email/Số điện thoại</label>
                 <input
                   type="text"
-                  id="emailOrPhone" // Thay id từ username thành emailOrPhone
-                  value={emailOrPhone} // Thay username thành emailOrPhone
-                  onChange={(e) => setEmailOrPhone(e.target.value)} // Thay setUsername thành setEmailOrPhone
+                  id="emailOrPhone"
+                  value={emailOrPhone}
+                  onChange={(e) => setEmailOrPhone(e.target.value)}
                   placeholder="Nhập email hoặc số điện thoại"
                   required
                   disabled={isLoading}

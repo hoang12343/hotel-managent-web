@@ -1,20 +1,18 @@
-
+import api from "./axiosClient";
 
 const userService = {
-    getAll(){
-        return api.post("/login", body)
+    getAll() {
+        return api.get("/findAccount"); // Lấy danh sách tài khoản
     },
-    create(body){
-        return api.post("/user/create", body)
+    create(body) {
+        return api.post("/createAccountByAdmin", body); // Tạo tài khoản bởi admin
     },
-    update(body){
-        return api.put("/user/create", body)
+    update(body, id) {
+        return api.put(`/updateAccount?accountId=${id}`, body); // Cập nhật tài khoản
     },
-    delete(body){
-        return api.delete(`/user/delete/${id}`)
+    delete(id) { // Sửa lỗi cú pháp
+        return api.delete(`/user/delete/${id}`); // Xóa tài khoản
     },
-    
-
-}
+};
 
 export default userService;

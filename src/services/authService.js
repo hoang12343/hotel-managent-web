@@ -44,7 +44,7 @@ export const login = async (email, password) => {
     password: password,
   };
   try {
-    const response = await axios.post(`${API_URL}/auth/signin`, data);
+    const response = await axios.post(`${API_URL}/auth/login`, data);
     console.log("login:", response);
     if (response.data.success === 200) {
       const token = response.data.message;
