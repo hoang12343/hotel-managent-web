@@ -1,3 +1,4 @@
+// src/components/ModalLogin.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../services/axiosClient";
@@ -27,9 +28,15 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
         email: emailOrPhone,
         password,
       });
+      console.log("Response từ server:", response.data);
 
-      const { token, username } = response.data; // Giả sử response trả về token và username
-      console.log("Đăng nhập thành công:", username);
+      const token = response.data.token;
+      const username =
+        response.data.username || response.data.user?.username || "User";
+
+      if (!token) {
+        throw new Error("Không nhận được token từ server!");
+      }
 
       if (rememberMe) {
         localStorage.setItem("token", token);
@@ -37,18 +44,20 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
         sessionStorage.setItem("token", token);
       }
 
-      setIsLoggedIn(true);
+      console.log("Calling onLoginSuccess with:", { username });
+      onLoginSuccess({ username });
+      console.log("Navigating to /");
+      navigate("/"); // Chuyển hướng ngay lập tức
       setTimeout(() => {
-        onClose();
+        onClose(); // Đóng modal sau khi hiển thị thông báo thành công
         resetForm();
-        navigate("/");
-        onLoginSuccess({ username }); // Gọi callback để truyền thông tin người dùng
       }, 2000);
     } catch (err) {
       const errorMessage =
         err.response?.data?.message ||
         "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.";
       setError(errorMessage);
+      console.error("Lỗi đăng nhập:", err);
     } finally {
       setIsLoading(false);
     }
@@ -67,9 +76,9 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
     setIsLoggedIn(true);
     setTimeout(() => {
       onClose();
-      setIsLoggedIn(false);
+      resetForm();
       navigate("/");
-      onLoginSuccess({ username: "GoogleUser" }); // Giả lập
+      onLoginSuccess({ username: "GoogleUser" }); // Đảm bảo truyền username
     }, 2000);
   };
 
@@ -78,9 +87,9 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
     setIsLoggedIn(true);
     setTimeout(() => {
       onClose();
-      setIsLoggedIn(false);
+      resetForm();
       navigate("/");
-      onLoginSuccess({ username: "AppleUser" }); // Giả lập
+      onLoginSuccess({ username: "AppleUser" }); // Đảm bảo truyền username
     }, 2000);
   };
 
@@ -89,9 +98,9 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
     setIsLoggedIn(true);
     setTimeout(() => {
       onClose();
-      setIsLoggedIn(false);
+      resetForm();
       navigate("/");
-      onLoginSuccess({ username: "FacebookUser" }); // Giả lập
+      onLoginSuccess({ username: "FacebookUser" }); // Đảm bảo truyền username
     }, 2000);
   };
 

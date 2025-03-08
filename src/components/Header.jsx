@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Header.scss";
-import ModalLogin from "./ModalLogin.jsx";
-import ModalRegister from "./ModalRegister.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Header = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,117 +12,73 @@ const Header = () => {
   const headerRef = useRef(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
-      // Mock user data - in a real app, you would fetch this from your API
       setUserInfo({
         username: "User",
         points: 250,
         avatar: "https://via.placeholder.com/40",
       });
     }
-
-    // Close dropdown when clicking outside
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsProfileDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
-  // Update header class when menu is open
   useEffect(() => {
     if (headerRef.current) {
-      if (isMenuOpen) {
-        headerRef.current.classList.add("mobile-menu-active");
-      } else {
-        headerRef.current.classList.remove("mobile-menu-active");
-      }
+      headerRef.current.classList.toggle("mobile-menu-active", isMenuOpen);
     }
   }, [isMenuOpen]);
 
-  const handleLoginClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleRegisterClick = () => {
-    setIsRegisterModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCloseRegisterModal = () => {
-    setIsRegisterModalOpen(false);
-  };
-
-  const handleOpenRegisterFromLogin = () => {
-    setIsModalOpen(false);
-    setIsRegisterModalOpen(true);
-  };
-
-  const handleOpenLoginFromRegister = () => {
-    setIsRegisterModalOpen(false);
-    setIsModalOpen(true);
-  };
-
-  const handleLoginSuccess = (userData) => {
-    // Add default values for new properties
+  const handleLoginSuccessLocal = (userData) => {
+    console.log("Header received userData:", userData);
     const enrichedUserData = {
       ...userData,
       points: userData.points || 0,
       avatar: userData.avatar || "../assets/images/avatar2.jpg",
+      username: userData.username || "User",
     };
-
-    setIsLoggedIn(true);
-    setUserInfo(enrichedUserData);
-    setIsModalOpen(false);
-
+    setIsLoggedIn(true); // Cập nhật trạng thái đăng nhập
+    setUserInfo(enrichedUserData); // Cập nhật thông tin người dùng
+    setIsProfileDropdownOpen(true); // Tự động mở dropdown
     toast.success("Đăng nhập thành công!", {
       position: "top-center",
       autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
     });
+    if (typeof onLoginSuccess === "function") {
+      onLoginSuccess(enrichedUserData);
+    }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserInfo(null);
     setIsProfileDropdownOpen(false);
-
     toast.info("Đăng xuất thành công!", {
       position: "top-center",
       autoClose: 3000,
     });
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    // Close profile dropdown when toggling menu
-    if (isProfileDropdownOpen) {
-      setIsProfileDropdownOpen(false);
-    }
-  };
-
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfileDropdown = (e) => {
-    e.stopPropagation(); // Prevent event from bubbling up
+    e.stopPropagation();
     setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
-
   const handleNavLinkClick = () => {
     setIsMenuOpen(false);
     setIsProfileDropdownOpen(false);
+  };
+
+  const handleLoginClick = () => {
+    console.log("Nút Đăng nhập được click, onOpenLogin:", onOpenLogin);
+    if (typeof onOpenLogin === "function") {
+      onOpenLogin();
+    } else {
+      console.error("onOpenLogin không phải là hàm!");
+    }
   };
 
   return (
@@ -201,7 +153,6 @@ const Header = () => {
                   {isProfileDropdownOpen ? "▲" : "▼"}
                 </span>
               </div>
-
               {isProfileDropdownOpen && (
                 <div className="profile-dropdown">
                   <ul>
@@ -236,7 +187,7 @@ const Header = () => {
                 </button>
               </ul>
               <ul className="login-btn">
-                <button onClick={handleRegisterClick}>Đăng ký</button>
+                <button onClick={onOpenRegister}>Đăng ký</button>
               </ul>
             </>
           )}
@@ -246,18 +197,6 @@ const Header = () => {
           {isMenuOpen ? "✕" : "☰"}
         </button>
       </header>
-
-      <ModalLogin
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onOpenRegister={handleOpenRegisterFromLogin}
-        onLoginSuccess={handleLoginSuccess}
-      />
-      <ModalRegister
-        isOpen={isRegisterModalOpen}
-        onClose={handleCloseRegisterModal}
-        onOpenLogin={handleOpenLoginFromRegister}
-      />
 
       <ToastContainer />
     </>

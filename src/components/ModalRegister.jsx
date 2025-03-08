@@ -1,4 +1,3 @@
-// src/components/ModalRegister.jsx
 import React, { useState } from "react";
 import axiosClient from "../services/axiosClient";
 import "./ModalRegister.scss";
@@ -29,7 +28,7 @@ const ModalRegister = ({
       setError("Vui lòng điền đầy đủ thông tin");
       return;
     }
-    if (!email.includes("@") || !email.includes(".")) {
+    if (!email.match(/^[A-Za-z0-9+_.-]+@(.+)$/)) {
       setError("Email không hợp lệ");
       return;
     }
@@ -47,15 +46,19 @@ const ModalRegister = ({
     try {
       console.log("Dữ liệu gửi lên:", { email, password, confirmPassword });
       const response = await axiosClient.post("/register", {
-        email: email,
-        password: password,
-        confirmPassword: confirmPassword,
+        email,
+        password,
+        confirmPassword,
       });
       console.log("Đăng ký thành công:", response.data);
       setIsRegistered(true);
       setTimeout(() => {
-        onClose(); // Đóng ModalRegister
-        onOpenEmailConfirm(email); // Mở EmailConfirmModal với email vừa đăng ký
+        onClose();
+        if (typeof onOpenEmailConfirm === "function") {
+          onOpenEmailConfirm(email);
+        } else {
+          console.warn("onOpenEmailConfirm is not a function");
+        }
         resetForm();
       }, 2000);
     } catch (err) {
@@ -64,8 +67,7 @@ const ModalRegister = ({
         data: err.response?.data,
         message: err.message,
       });
-      const errorMessage = err.message || "Đăng ký thất bại. Vui lòng thử lại.";
-      setError(errorMessage);
+      setError(err.message || "Đăng ký thất bại. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
     }
@@ -80,22 +82,11 @@ const ModalRegister = ({
     setError("");
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google register clicked");
+  const handleSocialLogin = (provider) => {
+    console.log(`${provider} register clicked`);
     setIsRegistered(true);
     setTimeout(() => onClose(), 2000);
-  };
-
-  const handleAppleLogin = () => {
-    console.log("Apple register clicked");
-    setIsRegistered(true);
-    setTimeout(() => onClose(), 2000);
-  };
-
-  const handleFacebookLogin = () => {
-    console.log("Facebook register clicked");
-    setIsRegistered(true);
-    setTimeout(() => onClose(), 2000);
+    // Thêm logic thực tế cho đăng ký bằng Google/Apple/Facebook nếu cần
   };
 
   return (
@@ -122,7 +113,7 @@ const ModalRegister = ({
                   type="email"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value.trim())}
                   placeholder="Nhập email"
                   required
                   disabled={isLoading}
@@ -182,7 +173,7 @@ const ModalRegister = ({
             <div className="social-login-buttons">
               <button
                 className="social-btn google-btn"
-                onClick={handleGoogleLogin}
+                onClick={() => handleSocialLogin("Google")}
                 disabled={isLoading}
               >
                 <svg className="social-logo" viewBox="0 0 24 24">
@@ -192,7 +183,7 @@ const ModalRegister = ({
               </button>
               <button
                 className="social-btn apple-btn"
-                onClick={handleAppleLogin}
+                onClick={() => handleSocialLogin("Apple")}
                 disabled={isLoading}
               >
                 <FaApple className="social-logo" />
@@ -200,7 +191,7 @@ const ModalRegister = ({
               </button>
               <button
                 className="social-btn facebook-btn"
-                onClick={handleFacebookLogin}
+                onClick={() => handleSocialLogin("Facebook")}
                 disabled={isLoading}
               >
                 <svg className="social-logo" viewBox="0 0 24 24">
