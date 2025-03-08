@@ -1,4 +1,3 @@
-// src/components/UserLoginManagement.jsx
 import React from "react";
 import ModalRegister from "./ModalRegister";
 import EmailConfirmModal from "./EmailConfirmModal";
@@ -27,9 +26,15 @@ const UserLoginManagement = ({
   };
 
   const handleLoginSuccessLocal = (userData) => {
-    console.log("Received userData in UserLoginManagement:", userData);
-    if (typeof onLoginSuccess === "function") {
-      onLoginSuccess(userData);
+    console.log("Đăng nhập thành công từ UserLoginManagement:", userData);
+    if (userData && userData.username) {
+      if (typeof onLoginSuccess === "function") {
+        onLoginSuccess(userData); // Truyền dữ liệu đầy đủ lên HomePage/Header
+      } else {
+        console.warn("onLoginSuccess không phải là hàm!");
+      }
+    } else {
+      console.warn("Không nhận được username từ ModalLogin!");
     }
   };
 
@@ -51,7 +56,7 @@ const UserLoginManagement = ({
         isOpen={isLoginOpen}
         onClose={onCloseLogin}
         onOpenRegister={handleOpenRegisterFromLogin}
-        onLoginSuccess={handleLoginSuccessLocal} // Truyền hàm cục bộ
+        onLoginSuccess={handleLoginSuccessLocal}
       />
     </>
   );

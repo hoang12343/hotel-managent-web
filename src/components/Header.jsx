@@ -11,18 +11,15 @@ const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
   const dropdownRef = useRef(null);
   const headerRef = useRef(null);
 
+  // Kiểm tra token khi component mount hoặc khi đăng nhập
   useEffect(() => {
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-      setUserInfo({
-        username: "User",
-        points: 250,
-        avatar: "https://via.placeholder.com/40",
-      });
+    if (token && !isLoggedIn) {
+      // Nếu có token nhưng chưa đăng nhập, cập nhật trạng thái
+      handleLoginSuccessLocal({ token });
     }
-  }, []);
+  }, [isLoggedIn]); // Thêm isLoggedIn vào dependency để theo dõi trạng thái đăng nhập
 
   useEffect(() => {
     if (headerRef.current) {
@@ -46,9 +43,22 @@ const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
       autoClose: 3000,
     });
     if (typeof onLoginSuccess === "function") {
-      onLoginSuccess(enrichedUserData);
+      onLoginSuccess(enrichedUserData); // Truyền dữ liệu lên HomePage
+      // Xóa window.location.reload() để tránh reload trang
     }
   };
+
+  // Kết nối onLoginSuccess từ props với handleLoginSuccessLocal
+  useEffect(() => {
+    // Nếu HomePage gọi onLoginSuccess, sử dụng nó để kích hoạt handleLoginSuccessLocal
+    if (typeof onLoginSuccess === "function") {
+      const originalOnLoginSuccess = onLoginSuccess;
+      onLoginSuccess.current = (userData) => {
+        handleLoginSuccessLocal(userData); // Gọi handleLoginSuccessLocal khi nhận dữ liệu từ ModalLogin
+        originalOnLoginSuccess(userData); // Gọi hàm gốc từ HomePage nếu cần
+      };
+    }
+  }, [onLoginSuccess]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

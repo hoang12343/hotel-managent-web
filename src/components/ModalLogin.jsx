@@ -1,4 +1,3 @@
-// src/components/ModalLogin.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../services/axiosClient";
@@ -44,12 +43,12 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
         sessionStorage.setItem("token", token);
       }
 
-      console.log("Calling onLoginSuccess with:", { username });
-      onLoginSuccess({ username });
-      console.log("Navigating to /");
-      navigate("/"); // Chuyển hướng ngay lập tức
+      setIsLoggedIn(true);
+      const userData = { username, token }; // Truyền thêm token nếu cần
+      onLoginSuccess(userData); // Gọi onLoginSuccess với dữ liệu đầy đủ
+      navigate("/"); // Chuyển hướng về trang chủ
       setTimeout(() => {
-        onClose(); // Đóng modal sau khi hiển thị thông báo thành công
+        onClose();
         resetForm();
       }, 2000);
     } catch (err) {
@@ -77,8 +76,9 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
     setTimeout(() => {
       onClose();
       resetForm();
+      const userData = { username: "GoogleUser", token: "mock-token" };
+      onLoginSuccess(userData);
       navigate("/");
-      onLoginSuccess({ username: "GoogleUser" }); // Đảm bảo truyền username
     }, 2000);
   };
 
@@ -88,8 +88,9 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
     setTimeout(() => {
       onClose();
       resetForm();
+      const userData = { username: "AppleUser", token: "mock-token" };
+      onLoginSuccess(userData);
       navigate("/");
-      onLoginSuccess({ username: "AppleUser" }); // Đảm bảo truyền username
     }, 2000);
   };
 
@@ -99,8 +100,9 @@ const ModalLogin = ({ isOpen, onClose, onOpenRegister, onLoginSuccess }) => {
     setTimeout(() => {
       onClose();
       resetForm();
+      const userData = { username: "FacebookUser", token: "mock-token" };
+      onLoginSuccess(userData);
       navigate("/");
-      onLoginSuccess({ username: "FacebookUser" }); // Đảm bảo truyền username
     }, 2000);
   };
 
