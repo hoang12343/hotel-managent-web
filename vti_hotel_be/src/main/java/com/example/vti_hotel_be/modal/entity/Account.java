@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import com.example.vti_hotel_be.modal.Base;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -27,6 +28,7 @@ public class Account extends Base {
 
     @Column(name = "email", unique = true)
     private String email;
+
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -51,6 +53,9 @@ public class Account extends Base {
 
     @Column(name = "confirmCode")
     private String confirmCode;
+
+    @Column(name = "confirmCodeExpiry")
+    private LocalDateTime confirmCodeExpiry;
 
 
     public enum Gender {

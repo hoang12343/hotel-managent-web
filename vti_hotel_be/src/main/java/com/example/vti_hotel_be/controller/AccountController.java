@@ -58,11 +58,14 @@ public class AccountController {
         }
     }
     @PostMapping("/register")
-    public ResponseEntity<?> registerAccount(@RequestBody AccountRequest request){
-        try{
-            return new ResponseEntity<>(accountService.register(request), HttpStatus.CREATED);
-        }catch(Exception e){
-            return new ResponseEntity<>("Error: "+e.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> registerAccount(@Valid @RequestBody AccountRequest request) {
+        try {
+            AccountDTO accountDTO = accountService.register(request);
+            return new ResponseEntity<>(accountDTO, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Lỗi server: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -81,6 +84,15 @@ public class AccountController {
             return new ResponseEntity<>(accountDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Lỗi: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PostMapping("/resendConfirmationCode")
+    public ResponseEntity<?> resendConfirmationCode(@RequestParam("email") String email) {
+        try {
+            accountService.resendConfirmationCode(email);
+            return new ResponseEntity<>("Mã xác nhận mới đã được gửi", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
