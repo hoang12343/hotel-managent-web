@@ -1,76 +1,31 @@
+// src/components/Header.jsx
 import React, { useState, useEffect, useRef } from "react";
 import "./Header.scss";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthProvider";
 
-const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+const Header = () => {
+  const {
+    isLoggedIn,
+    userInfo,
+    setIsLoginOpen,
+    setIsRegisterOpen,
+    handleLoginSuccess,
+    handleLogout,
+    isLoading,
+  } = useAuth();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const headerRef = useRef(null);
-
-  // Kiểm tra token khi component mount hoặc khi đăng nhập
-  useEffect(() => {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (token && !isLoggedIn) {
-      // Nếu có token nhưng chưa đăng nhập, cập nhật trạng thái
-      handleLoginSuccessLocal({ token });
-    }
-  }, [isLoggedIn]); // Thêm isLoggedIn vào dependency để theo dõi trạng thái đăng nhập
 
   useEffect(() => {
     if (headerRef.current) {
       headerRef.current.classList.toggle("mobile-menu-active", isMenuOpen);
     }
   }, [isMenuOpen]);
-
-  const handleLoginSuccessLocal = (userData) => {
-    console.log("Header received userData:", userData);
-    const enrichedUserData = {
-      ...userData,
-      points: userData.points || 0,
-      avatar: userData.avatar || "../assets/images/avatar2.jpg",
-      username: userData.username || "User",
-    };
-    setIsLoggedIn(true); // Cập nhật trạng thái đăng nhập
-    setUserInfo(enrichedUserData); // Cập nhật thông tin người dùng
-    setIsProfileDropdownOpen(true); // Tự động mở dropdown
-    toast.success("Đăng nhập thành công!", {
-      position: "top-center",
-      autoClose: 3000,
-    });
-    if (typeof onLoginSuccess === "function") {
-      onLoginSuccess(enrichedUserData); // Truyền dữ liệu lên HomePage
-      // Xóa window.location.reload() để tránh reload trang
-    }
-  };
-
-  // Kết nối onLoginSuccess từ props với handleLoginSuccessLocal
-  useEffect(() => {
-    // Nếu HomePage gọi onLoginSuccess, sử dụng nó để kích hoạt handleLoginSuccessLocal
-    if (typeof onLoginSuccess === "function") {
-      const originalOnLoginSuccess = onLoginSuccess;
-      onLoginSuccess.current = (userData) => {
-        handleLoginSuccessLocal(userData); // Gọi handleLoginSuccessLocal khi nhận dữ liệu từ ModalLogin
-        originalOnLoginSuccess(userData); // Gọi hàm gốc từ HomePage nếu cần
-      };
-    }
-  }, [onLoginSuccess]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    setIsLoggedIn(false);
-    setUserInfo(null);
-    setIsProfileDropdownOpen(false);
-    toast.info("Đăng xuất thành công!", {
-      position: "top-center",
-      autoClose: 3000,
-    });
-  };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProfileDropdown = (e) => {
@@ -82,13 +37,12 @@ const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
     setIsProfileDropdownOpen(false);
   };
 
-  const handleLoginClick = () => {
-    console.log("Nút Đăng nhập được click, onOpenLogin:", onOpenLogin);
-    if (typeof onOpenLogin === "function") {
-      onOpenLogin();
-    } else {
-      console.error("onOpenLogin không phải là hàm!");
-    }
+  const handleLoginClick = () => setIsLoginOpen(true);
+  const handleRegisterClick = () => setIsRegisterOpen(true);
+
+  const onLogout = () => {
+    handleLogout(); // Thông báo đã được xử lý trong AuthProvider
+    setIsProfileDropdownOpen(false);
   };
 
   return (
@@ -150,14 +104,16 @@ const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
               <div className="profile-info" onClick={toggleProfileDropdown}>
                 <div className="avatar-container">
                   <img
-                    src={userInfo?.avatar}
+                    src={userInfo?.avatar || "../assets/images/avatar2.jpg"}
                     alt="User Avatar"
                     className="user-avatar"
                   />
                 </div>
                 <div className="user-details">
-                  <span className="username">{userInfo?.username}</span>
-                  <span className="points">{userInfo?.points} điểm</span>
+                  <span className="username">
+                    {userInfo?.username || "User"}
+                  </span>
+                  <span className="points">{userInfo?.points || 0} điểm</span>
                 </div>
                 <span className="dropdown-arrow">
                   {isProfileDropdownOpen ? "▲" : "▼"}
@@ -178,8 +134,10 @@ const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
                     <li onClick={() => setIsProfileDropdownOpen(false)}>
                       <a href="#saved">Đã lưu</a>
                     </li>
-                    <li className="logout-item" onClick={handleLogout}>
-                      <a href="#logout">Đăng xuất</a>
+                    <li className="logout-item" onClick={onLogout}>
+                      <a href="#logout">
+                        {isLoading ? "Đang đăng xuất..." : "Đăng xuất"}
+                      </a>
                     </li>
                   </ul>
                 </div>
@@ -192,18 +150,21 @@ const Header = ({ onOpenRegister, onOpenLogin, onLoginSuccess }) => {
                   type="button"
                   className="btn btn-primary"
                   onClick={handleLoginClick}
+                  disabled={isLoading}
                 >
                   Đăng nhập
                 </button>
               </ul>
               <ul className="login-btn">
-                <button onClick={onOpenRegister}>Đăng ký</button>
+                <button onClick={handleRegisterClick} disabled={isLoading}>
+                  Đăng ký
+                </button>
               </ul>
             </>
           )}
         </div>
 
-        <button className="hamburger" onClick={toggleMenu}>
+        <button className="hamburger" onClick={toggleMenu} disabled={isLoading}>
           {isMenuOpen ? "✕" : "☰"}
         </button>
       </header>

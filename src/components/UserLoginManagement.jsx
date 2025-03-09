@@ -1,63 +1,49 @@
+// src/components/UserLoginManagement.js
 import React from "react";
 import ModalRegister from "./ModalRegister";
 import EmailConfirmModal from "./EmailConfirmModal";
 import ModalLogin from "./ModalLogin";
+import { useAuth } from "../context/AuthProvider";
 
-const UserLoginManagement = ({
-  isRegisterOpen,
-  onCloseRegister,
-  onOpenEmailConfirm,
-  isEmailConfirmOpen,
-  onCloseEmailConfirm,
-  emailToConfirm,
-  onOpenLogin,
-  isLoginOpen,
-  onCloseLogin,
-  onLoginSuccess,
-}) => {
+const UserLoginManagement = () => {
+  const {
+    isRegisterOpen,
+    setIsRegisterOpen,
+    isEmailConfirmOpen,
+    setIsEmailConfirmOpen,
+    emailToConfirm,
+    setEmailToConfirm,
+    setIsLoginOpen,
+  } = useAuth();
+
   const handleOpenRegisterFromLogin = () => {
-    onCloseLogin();
-    setTimeout(() => onCloseRegister(true), 100);
+    setIsLoginOpen(false);
+    setTimeout(() => setIsRegisterOpen(true), 100);
   };
 
   const handleOpenLoginFromRegister = () => {
-    onCloseRegister();
-    setTimeout(() => onOpenLogin(), 100);
-  };
-
-  const handleLoginSuccessLocal = (userData) => {
-    console.log("Đăng nhập thành công từ UserLoginManagement:", userData);
-    if (userData && userData.username) {
-      if (typeof onLoginSuccess === "function") {
-        onLoginSuccess(userData); // Truyền dữ liệu đầy đủ lên HomePage/Header
-      } else {
-        console.warn("onLoginSuccess không phải là hàm!");
-      }
-    } else {
-      console.warn("Không nhận được username từ ModalLogin!");
-    }
+    setIsRegisterOpen(false);
+    setTimeout(() => setIsLoginOpen(true), 100);
   };
 
   return (
     <>
       <ModalRegister
         isOpen={isRegisterOpen}
-        onClose={onCloseRegister}
+        onClose={() => setIsRegisterOpen(false)}
         onOpenLogin={handleOpenLoginFromRegister}
-        onOpenEmailConfirm={onOpenEmailConfirm}
+        onOpenEmailConfirm={(email) => {
+          setEmailToConfirm(email);
+          setIsEmailConfirmOpen(true);
+        }}
       />
       <EmailConfirmModal
         isOpen={isEmailConfirmOpen}
-        onClose={onCloseEmailConfirm}
+        onClose={() => setIsEmailConfirmOpen(false)}
         email={emailToConfirm}
-        onOpenLogin={onOpenLogin}
+        onOpenLogin={() => setIsLoginOpen(true)}
       />
-      <ModalLogin
-        isOpen={isLoginOpen}
-        onClose={onCloseLogin}
-        onOpenRegister={handleOpenRegisterFromLogin}
-        onLoginSuccess={handleLoginSuccessLocal}
-      />
+      <ModalLogin />
     </>
   );
 };
