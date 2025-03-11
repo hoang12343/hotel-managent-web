@@ -8,7 +8,7 @@
   top: 0;
   left: 0;
   box-sizing: border-box;
-  flex-wrap: wrap;
+
   width: 100%;
   z-index: 1000;
   background-color: transparent; // Trong suốt ban đầu
@@ -25,9 +25,8 @@
       font-weight: bold;
       color: #fff; // Màu trắng ban đầu để nổi trên background-image
       transition: color 0.3s ease;
-      flex: 1; // Chiếm toàn bộ không gian ngang
-      display: flex;
-      justify-content: center; // Căn giữa logo trong nav-logo
+      text-align: center;
+
 
 
 
@@ -36,7 +35,6 @@
       }
     }
   }
-
 
   .nav-list {
     ul {
@@ -117,7 +115,7 @@
       .profile-info {
         display: flex;
         align-items: center;
-        gap: 0.5rem; // Giảm gap để gọn hơn
+        gap: 3.1rem; // Giảm gap để gọn hơn
         padding: 0.3rem;
         border: 1px solid rgba(255, 255, 255, 0.5); // Viền trắng mờ ban đầu
         border-radius: 8px;

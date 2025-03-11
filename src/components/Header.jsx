@@ -79,7 +79,7 @@ const Header = () => {
                 className="nav-link"
                 onClick={handleNavLinkClick}
               >
-                Phòng
+                Phòng nghỉ
               </a>
             </li>
             <li>

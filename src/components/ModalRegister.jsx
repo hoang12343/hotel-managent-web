@@ -14,9 +14,9 @@ const ModalRegister = ({
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false);
 
   if (!isOpen) return null;
 
@@ -37,56 +37,45 @@ const ModalRegister = ({
       return;
     }
     if (!agreeTerms) {
-      setError("Bạn phải đồng ý với Điều khoản dịch vụ");
+      setError("Vui lòng đồng ý với Điều khoản dịch vụ");
       return;
     }
 
     setIsLoading(true);
 
     try {
-      console.log("Dữ liệu gửi lên:", { email, password, confirmPassword });
       const response = await axiosClient.post("/register", {
         email,
         password,
         confirmPassword,
       });
-      console.log("Đăng ký thành công:", response.data);
       setIsRegistered(true);
       setTimeout(() => {
         onClose();
-        if (typeof onOpenEmailConfirm === "function") {
-          onOpenEmailConfirm(email);
-        } else {
-          console.warn("onOpenEmailConfirm is not a function");
-        }
+        onOpenEmailConfirm(email);
         resetForm();
       }, 2000);
     } catch (err) {
-      console.log("Lỗi chi tiết từ server:", {
-        status: err.response?.status,
-        data: err.response?.data,
-        message: err.message,
-      });
-      setError(err.message || "Đăng ký thất bại. Vui lòng thử lại.");
+      setError(
+        err.response?.data?.message || "Đăng ký thất bại. Vui lòng thử lại."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const resetForm = () => {
-    setIsRegistered(false);
     setEmail("");
     setPassword("");
     setConfirmPassword("");
     setAgreeTerms(false);
     setError("");
+    setIsRegistered(false);
   };
 
   const handleSocialLogin = (provider) => {
     console.log(`${provider} register clicked`);
-    setIsRegistered(true);
-    setTimeout(() => onClose(), 2000);
-    // Thêm logic thực tế cho đăng ký bằng Google/Apple/Facebook nếu cần
+    // Thêm logic đăng ký bằng Google/Apple/Facebook nếu cần
   };
 
   return (
@@ -95,7 +84,6 @@ const ModalRegister = ({
         <button className="modal-close-btn" onClick={onClose}>
           <IoCloseSharp />
         </button>
-
         {isRegistered ? (
           <div className="register-success">
             <h2>Đăng ký thành công</h2>
@@ -115,8 +103,8 @@ const ModalRegister = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value.trim())}
                   placeholder="Nhập email"
-                  required
                   disabled={isLoading}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -127,8 +115,8 @@ const ModalRegister = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Nhập mật khẩu"
-                  required
                   disabled={isLoading}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -139,8 +127,8 @@ const ModalRegister = ({
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Xác nhận mật khẩu"
-                  required
                   disabled={isLoading}
+                  required
                 />
               </div>
               <div className="terms-group">
@@ -160,25 +148,20 @@ const ModalRegister = ({
               <button
                 type="submit"
                 className="register-submit-btn"
-                disabled={!agreeTerms || isLoading}
+                disabled={isLoading || !agreeTerms}
               >
                 {isLoading ? "Đang xử lý..." : "Đăng ký"}
               </button>
             </form>
-
             <div className="social-login-separator">
               <span>Hoặc đăng ký với</span>
             </div>
-
             <div className="social-login-buttons">
               <button
                 className="social-btn google-btn"
                 onClick={() => handleSocialLogin("Google")}
                 disabled={isLoading}
               >
-                <svg className="social-logo" viewBox="0 0 24 24">
-                  {/* SVG Google */}
-                </svg>
                 Google
               </button>
               <button
@@ -186,21 +169,16 @@ const ModalRegister = ({
                 onClick={() => handleSocialLogin("Apple")}
                 disabled={isLoading}
               >
-                <FaApple className="social-logo" />
-                Apple
+                <FaApple className="social-logo" /> Apple
               </button>
               <button
                 className="social-btn facebook-btn"
                 onClick={() => handleSocialLogin("Facebook")}
                 disabled={isLoading}
               >
-                <svg className="social-logo" viewBox="0 0 24 24">
-                  {/* SVG Facebook */}
-                </svg>
                 Facebook
               </button>
             </div>
-
             <div className="login-link">
               Đã có tài khoản?{" "}
               <button onClick={onOpenLogin} className="login-now">

@@ -4,14 +4,13 @@ import "./EmailConfirmModal.scss";
 import { IoCloseSharp } from "react-icons/io5";
 
 const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
-  const [code, setCode] = useState(["", "", "", "", "", ""]); // 6 ký tự
-  const [password, setPassword] = useState("");
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120);
   const [isCodeExpired, setIsCodeExpired] = useState(false);
-  const inputRefs = useRef([]); // Tham chiếu đến các ô input
+  const inputRefs = useRef([]);
 
   useEffect(() => {
     if (!isOpen || isConfirmed) return;
@@ -31,24 +30,31 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
     return () => clearInterval(timer);
   }, [isOpen, isConfirmed]);
 
+  useEffect(() => {
+    if (isOpen && inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleCodeChange = (index, value) => {
-    if (!/^[A-Za-z0-9]?$/.test(value)) return; // Chỉ cho phép chữ và số, tối đa 1 ký tự
-
+    if (!/^[A-Za-z0-9]?$/.test(value)) return;
     const newCode = [...code];
-    newCode[index] = value.toUpperCase(); // Chuyển thành chữ in hoa
+    newCode[index] = value.toUpperCase();
     setCode(newCode);
 
-    // Chuyển focus sang ô tiếp theo nếu nhập xong
     if (value && index < 5) {
       inputRefs.current[index + 1].focus();
+    }
+    if (index === 5 && value) {
+      handleConfirm({ preventDefault: () => {} });
     }
   };
 
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputRefs.current[index - 1].focus(); // Quay lại ô trước nếu xóa
+      inputRefs.current[index - 1].focus();
     }
   };
 
@@ -57,8 +63,8 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
     setError("");
 
     const confirmCode = code.join("");
-    if (!confirmCode || confirmCode.length !== 6 || !password) {
-      setError("Vui lòng điền đầy đủ mã xác nhận (6 ký tự) và mật khẩu");
+    if (!confirmCode || confirmCode.length !== 6) {
+      setError("Vui lòng điền đầy đủ mã xác nhận (6 ký tự)");
       return;
     }
     if (isCodeExpired) {
@@ -67,26 +73,20 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
     }
 
     setIsLoading(true);
-
     try {
-      console.log("Dữ liệu xác nhận:", { email, password, confirmCode });
       const response = await axiosClient.post("/confirmAccount", null, {
-        params: { email, password, confirmCode },
+        params: { email, confirmCode },
       });
-      console.log("Xác nhận thành công:", response.data);
       setIsConfirmed(true);
       setTimeout(() => {
         onClose();
-        if (typeof onOpenLogin === "function") onOpenLogin();
+        onOpenLogin();
         resetForm();
       }, 2000);
     } catch (err) {
-      console.log("Lỗi chi tiết từ server:", {
-        status: err.response?.status,
-        data: err.response?.data,
-        message: err.message,
-      });
-      setError(err.message || "Xác nhận thất bại. Vui lòng thử lại.");
+      setError(
+        err.response?.data?.message || "Xác nhận thất bại. Vui lòng thử lại."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +95,6 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
   const handleResendCode = async () => {
     setIsLoading(true);
     setError("");
-
     try {
       await axiosClient.post("/resendConfirmationCode", null, {
         params: { email },
@@ -105,7 +104,9 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
       setCode(["", "", "", "", "", ""]);
       setError("Mã xác nhận mới đã được gửi!");
     } catch (err) {
-      setError(err.message || "Không thể gửi lại mã. Vui lòng thử lại.");
+      setError(
+        err.response?.data?.message || "Không thể gửi lại mã. Vui lòng thử lại."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +114,6 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
 
   const resetForm = () => {
     setCode(["", "", "", "", "", ""]);
-    setPassword("");
     setError("");
     setIsConfirmed(false);
     setTimeLeft(120);
@@ -126,7 +126,6 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
         <button className="modal-close-btn" onClick={onClose}>
           <IoCloseSharp />
         </button>
-
         {isConfirmed ? (
           <div className="confirm-success">
             <h2>Xác nhận thành công</h2>
@@ -150,18 +149,6 @@ const EmailConfirmModal = ({ isOpen, onClose, email, onOpenLogin }) => {
               </div>
             )}
             <form onSubmit={handleConfirm}>
-              <div className="form-group">
-                <label htmlFor="password">Mật khẩu</label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Nhập mật khẩu của bạn"
-                  required
-                  disabled={isLoading || isCodeExpired}
-                />
-              </div>
               <div className="code-inputs">
                 <label>Mã xác nhận</label>
                 <div className="code-input-container">

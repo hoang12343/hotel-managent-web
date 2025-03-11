@@ -1,12 +1,11 @@
-// src/components/ModalLogin.jsx
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import axiosClient from "../services/axiosClient";
 import "./ModalLogin.scss";
-import { FaApple } from "react-icons/fa6";
 import { IoCloseSharp } from "react-icons/io5";
 
-const ModalLogin = () => {
+const ModalLogin = ({ onOpenForgotPassword }) => {
+  // Thêm prop
   const { isLoginOpen, setIsLoginOpen, handleLoginSuccess, isLoading } =
     useAuth();
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -25,8 +24,6 @@ const ModalLogin = () => {
         email: emailOrPhone,
         password,
       });
-
-      console.log("Response data từ server:", response.data); // Log dữ liệu phản hồi
 
       const token = response.data.token;
       const username = response.data.username || "User";
@@ -117,9 +114,14 @@ const ModalLogin = () => {
               />
               Remember me
             </label>
-            <a href="#forgot-password" className="forgot-password">
+            <button
+              type="button"
+              className="forgot-password"
+              onClick={onOpenForgotPassword} // Gọi hàm mở modal quên mật khẩu
+              disabled={isLoading}
+            >
               Quên mật khẩu?
-            </a>
+            </button>
           </div>
           <button
             type="submit"

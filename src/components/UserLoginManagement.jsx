@@ -1,8 +1,7 @@
-// src/components/UserLoginManagement.js
 import React from "react";
 import ModalRegister from "./ModalRegister";
 import EmailConfirmModal from "./EmailConfirmModal";
-import ModalLogin from "./ModalLogin";
+import ModalLogin from "./ModalLogin"; // Giả định bạn đã có ModalLogin
 import { useAuth } from "../context/AuthProvider";
 
 const UserLoginManagement = () => {
@@ -43,7 +42,7 @@ const UserLoginManagement = () => {
         email={emailToConfirm}
         onOpenLogin={() => setIsLoginOpen(true)}
       />
-      <ModalLogin />
+      <ModalLogin /> {/* Giả định bạn đã có ModalLogin */}
     </>
   );
 };
