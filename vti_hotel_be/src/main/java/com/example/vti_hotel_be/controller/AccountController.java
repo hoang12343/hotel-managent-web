@@ -73,14 +73,9 @@ public class AccountController {
     @PostMapping("/confirmAccount")
     public ResponseEntity<?> confirmAccount(
             @RequestParam("email") String email,
-            @RequestParam("password") String password,
             @RequestParam("confirmCode") String confirmCode) {
         try {
-            AccountDTO accountDTO = accountService.confirmAccount(
-                    email.trim(),
-                    password,
-                    confirmCode.trim()
-            );
+            AccountDTO accountDTO = accountService.confirmAccount(email, confirmCode);
             return new ResponseEntity<>(accountDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Lỗi: " + e.getMessage(), HttpStatus.BAD_REQUEST);

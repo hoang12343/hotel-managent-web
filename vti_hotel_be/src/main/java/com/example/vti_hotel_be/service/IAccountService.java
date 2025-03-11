@@ -23,7 +23,7 @@ public interface IAccountService {
 
     //register
     AccountDTO register(AccountRequest request) throws Exception;
-    AccountDTO confirmAccount(String email, String password, String confirmationCode) throws Exception;
+    AccountDTO confirmAccount(String email, String confirmationCode) throws Exception;
     void resendConfirmationCode(String email) throws Exception;
 
 }

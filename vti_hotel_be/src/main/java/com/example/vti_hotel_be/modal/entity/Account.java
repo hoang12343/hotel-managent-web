@@ -57,6 +57,11 @@ public class Account extends Base {
     @Column(name = "confirmCodeExpiry")
     private LocalDateTime confirmCodeExpiry;
 
+    @Column(name = "reset_token") // Thêm trường resetToken
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry") // Thêm trường resetTokenExpiry
+    private LocalDateTime resetTokenExpiry;
 
     public enum Gender {
         MALE, FEMALE

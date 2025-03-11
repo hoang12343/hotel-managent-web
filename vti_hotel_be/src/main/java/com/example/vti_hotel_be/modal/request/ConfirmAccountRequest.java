@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ConfirmAccountRequest {
     private String email;
-    private String password;
+
     private String confirmationCode;
 }

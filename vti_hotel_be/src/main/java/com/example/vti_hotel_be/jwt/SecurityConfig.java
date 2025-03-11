@@ -67,7 +67,9 @@ public class SecurityConfig {
                                 "hotel/createRoom",
                                 "/hotel/register",
                                 "hotel/confirmAccount",
-                                "/hotel/findAccount"
+                                "/hotel/findAccount",
+                                "hotel/confirmAccount",
+                                "/hotel/resendConfirmationCode"
 //                                "/hotel/sendMail"
 
                         ).permitAll()

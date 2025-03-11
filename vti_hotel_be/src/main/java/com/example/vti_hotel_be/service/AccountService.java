@@ -81,43 +81,20 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional
-    public AccountDTO confirmAccount(String email, String password, String confirmationCode) throws Exception {
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("Email không được để trống");
+    public AccountDTO confirmAccount(String email, String confirmationCode) throws Exception {
+        Account account = accountRepository.findByEmail(email);
+        if (Objects.isNull(account)){
+            throw new Exception("Account not found");
         }
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new IllegalArgumentException("Định dạng email không hợp lệ");
+        if (!confirmationCode.equals(account.getConfirmCode()))
+        {
+            throw new Exception("Mã xác nhận không trùng khớp");
         }
-        if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Mật khẩu không được để trống");
-        }
-        if (confirmationCode == null || confirmationCode.trim().isEmpty()) {
-            throw new IllegalArgumentException("Mã xác nhận không được để trống");
-        }
-
-        Account account = accountRepository.findByEmail(email.trim());
-        if (account == null) {
-            throw new IllegalArgumentException("Email không tồn tại");
-        }
-        if (!passwordEncoder.matches(password, account.getPassword())) {
-            throw new IllegalArgumentException("Mật khẩu không đúng");
-        }
-        String storedCode = account.getConfirmCode();
-        if (storedCode == null || !storedCode.trim().equalsIgnoreCase(confirmationCode.trim())) {
-            throw new IllegalArgumentException("Mã xác nhận không đúng");
-        }
-        if (account.getConfirmCodeExpiry() == null || LocalDateTime.now().isAfter(account.getConfirmCodeExpiry())) {
-            throw new IllegalArgumentException("Mã xác nhận đã hết hạn");
-        }
-        if (account.getStatus() != Account.AccountStatus.PENDING) {
-            throw new IllegalArgumentException("Tài khoản không ở trạng thái chờ xác nhận");
-        }
-
-        account.setConfirmCode(null);
+        account.setConfirmCodeExpiry(LocalDateTime.now().plusSeconds(120));
+        account.setConfirmCode("");
         account.setConfirmCodeExpiry(null);
         account.setStatus(Account.AccountStatus.ACTIVE);
         accountRepository.save(account);
-
         return new AccountDTO(account);
     }
 
