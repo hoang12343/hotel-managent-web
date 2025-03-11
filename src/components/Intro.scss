@@ -1,7 +1,7 @@
 .header-container {
   padding-block: 10rem 5rem;
-  height: 280px;
-  background-image: url("../assets/Intro.jpg");
+  height: 470px;
+  background-image: url("../assets/resort.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -14,12 +14,10 @@
   text-align: center;
   overflow: hidden;
   position: relative; // Đã có sẵn, cần để absolute hoạt động
-  border-radius: 15px;
+
 }
 
-// .intro-content {
-//   padding-top: 0.5rem;
-// }
+
 
 .booking-container {
   width: 100%;

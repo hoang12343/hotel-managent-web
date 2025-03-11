@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import React, { useState, useEffect, useRef } from "react";
 import "./Header.scss";
 import { ToastContainer } from "react-toastify";
@@ -18,8 +17,20 @@ const Header = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false); // Trạng thái scroll
   const dropdownRef = useRef(null);
   const headerRef = useRef(null);
+
+  // Xử lý scroll để thay đổi trạng thái header ngay khi scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 0); // Đổi màu ngay khi scroll xuống 1px
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (headerRef.current) {
@@ -41,13 +52,16 @@ const Header = () => {
   const handleRegisterClick = () => setIsRegisterOpen(true);
 
   const onLogout = () => {
-    handleLogout(); // Thông báo đã được xử lý trong AuthProvider
+    handleLogout();
     setIsProfileDropdownOpen(false);
   };
 
   return (
     <>
-      <header className="header" ref={headerRef}>
+      <header
+        className={`header ${isScrolled ? "scrolled" : ""}`} // Thêm class scrolled khi cuộn
+        ref={headerRef}
+      >
         <div className="nav-logo">
           <h1 className="logo">VTI HOTEL</h1>
         </div>
